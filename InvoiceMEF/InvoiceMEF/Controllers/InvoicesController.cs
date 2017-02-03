@@ -1,6 +1,8 @@
 ﻿using InvoiceMEF.Models;
+using InvoiceMEF.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -28,6 +30,10 @@ namespace InvoiceMEF.Controllers
         }
 
 
+
+        //Actions
+        //
+
         // GET: Invoices
         public ActionResult Index()
         {
@@ -36,6 +42,7 @@ namespace InvoiceMEF.Controllers
             return View(invoices);
         }
 
+        // GET: Invoices/Details/id
         [Route("Invoices/Details/{id}")]
         public ActionResult Details(int id)
         {
@@ -44,30 +51,56 @@ namespace InvoiceMEF.Controllers
             return View(itemLines);
         }
 
-        public ActionResult New()
+        // GET: Create
+        public ActionResult Create()
         {
-            return View();
+            var formViewModel = new FormViewModel();
+
+            return View(formViewModel);
         }
 
         [HttpPost]
-        public ActionResult CreateInvoice(Invoice invoice)
+        public ActionResult Create(FormViewModel formViewModel)
         {
-            /*var user = UserManager.FindById(User.Identity.GetUserId());
 
-            var i = new Invoice()
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            var itemLines = formViewModel.ItemLines;
+
+            var invoice = new Invoice()
             {
                 ApplicationUser = user,
-                BuyerName = invoice.BuyerName,
+                BuyerName = formViewModel.Invoice.BuyerName,
                 DateCreated = DateTime.Today,
-                DateDue = invoice.DateDue
+                DateDue = formViewModel.Invoice.DateDue
+
             };
 
-            _context.Invoices.Add(i);
+            _context.Invoices.Add(invoice);
             _context.SaveChanges();
 
-            return RedirectToAction("NewItems", new { invoiceId = i.ApplicationUser.Id });*/
 
-            return View();
+
+
+            foreach (var current in itemLines)
+            {
+                var itemLine = new ItemLine()
+                {
+                    Description = current.Description,
+                    Amount = current.Amount,
+                    SinglePrice = current.SinglePrice,
+                    Invoice = invoice
+
+                };
+
+                _context.ItemLines.Add(itemLine);
+            }
+
+            invoice.TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.TotalPrice));
+            _context.Invoices.Add(invoice);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

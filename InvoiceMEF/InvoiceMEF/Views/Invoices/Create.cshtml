@@ -1,0 +1,77 @@
+﻿@model InvoiceMEF.ViewModels.FormViewModel
+
+<script type="text/javascript" src="../../Scripts/jquery-1.10.2.min.js"></script>
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Invoice</h2>
+<hr />
+
+<h4>Basic Info</h4>
+<br />
+
+@using (@Html.BeginForm("Create", "Invoices"))
+{
+    <div class="form-group">
+        @Html.LabelFor(i => i.Invoice.BuyerName)
+        @Html.TextBoxFor(i => i.Invoice.BuyerName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(i => i.Invoice.DateDue)
+        @Html.TextBoxFor(i => i.Invoice.DateDue, new { @class = "form-control" })
+    </div>
+
+    <br />
+
+    <h4>Items</h4>
+
+    <div id="itemList">
+        @if (Model.ItemLines.Count > 0)
+        {
+            <span>Description</span>
+            <span>Amount</span>
+            <span>SinglePrice</span>
+        }
+        @*@for (int i = 0; i < Model.Items.Count; i++)
+        {
+            <div class="itemRow form-group" style="margin-bottom: 12px">
+
+                @Html.TextBoxFor(model => Model.Items[i].Description, new { @class = "itemDescription" })
+                @Html.TextBoxFor(model => Model.Items[i].Amount, new { @class = "itemAmount" })
+                @Html.TextBoxFor(model => Model.Items[i].SinglePrice, new { @class = "itemSinglePrice" })
+
+                <a href="javascript:void(0);" class="remRow btn btn-danger">X</a>
+            </div>
+        }*@
+    </div>
+   
+    <p><a href="javascript:void(0);" class="addRow btn btn-info">Add Item</a></p>
+       
+    //<input type="submit" name="btnSubmit" value="Create Invoice" class="btn btn-success" />
+    <p><button type="submit" name="btnSubmit" class="btn btn-success">Create Invoice</button></p>
+   
+}
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".addRow").click(function () {
+
+            var rowCount = $('.itemRow').length;
+            if (rowCount == 0) {
+                $("#itemList").append('<p style="word-spacing:220px;font-weight:bold">Description Amount SinglePrice</p>');
+            }
+            $("#itemList")
+                .append('<div class="itemRow form-inline" style="margin-bottom: 12px">' +
+                '<input type="text" name="ItemLines[' + rowCount + '].Description" class="itemDescription form-control" style="margin-right:10px"/>' +
+                '<input type="text" name="ItemLines[' + rowCount + '].Amount" class="itemAmount form-control" style="margin-right:10px"/>' +
+                '<input type="text" name="ItemLines[' + rowCount + '].SinglePrice" class="itemSinglePrice form-control" style="margin-right:23px"/>' +
+                '</div>');
+        });       
+    });
+</script>
+
