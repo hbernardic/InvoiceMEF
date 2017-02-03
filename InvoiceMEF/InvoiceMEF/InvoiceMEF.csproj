@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BeginCollectionItem, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BeginCollectionItem.1.2.1.0\lib\net35\BeginCollectionItem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -178,14 +182,24 @@
     <Compile Include="Migrations\201702021619454_InitialMigration.Designer.cs">
       <DependentUpon>201702021619454_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702022212460_MakePricesNullable.cs" />
+    <Compile Include="Migrations\201702022212460_MakePricesNullable.Designer.cs">
+      <DependentUpon>201702022212460_MakePricesNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201702022317401_ChangeUserId.cs" />
+    <Compile Include="Migrations\201702022317401_ChangeUserId.Designer.cs">
+      <DependentUpon>201702022317401_ChangeUserId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\ItemLine.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\FormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -244,6 +258,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
     <Content Include="Views\Invoices\Details.cshtml" />
+    <Content Include="Views\Invoices\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -259,6 +274,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201702021619454_InitialMigration.resx">
       <DependentUpon>201702021619454_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702022212460_MakePricesNullable.resx">
+      <DependentUpon>201702022212460_MakePricesNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702022317401_ChangeUserId.resx">
+      <DependentUpon>201702022317401_ChangeUserId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

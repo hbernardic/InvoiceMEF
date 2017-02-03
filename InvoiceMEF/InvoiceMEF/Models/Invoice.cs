@@ -8,8 +8,8 @@ namespace InvoiceMEF.Models
         public int InvoiceId { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateDue { get; set; }
-        public decimal TotalPrice { get; set; }
-        public decimal TotalPriceAfterTax { get; set; }
+        public decimal? TotalPrice { get; set; }
+        public decimal? TotalPriceAfterTax { get; set; }
         public string BuyerName { get; set; }
 
 
