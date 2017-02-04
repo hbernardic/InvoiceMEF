@@ -95,8 +95,7 @@ namespace InvoiceMEF.Controllers
                 _context.ItemLines.Add(itemLine);
             }
 
-            invoice.TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.TotalPrice));
-            _context.Invoices.Add(invoice);
+
 
             _context.SaveChanges();
 
