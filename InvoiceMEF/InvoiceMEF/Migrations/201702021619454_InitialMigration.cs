@@ -88,13 +88,12 @@ namespace InvoiceMEF.Migrations
                     Description = c.String(nullable: false),
                     Amount = c.Int(nullable: false),
                     SinglePrice = c.Decimal(nullable: false, precision: 18, scale: 2),
-                    //TotalPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
+                    TotalPrice = c.Decimal(nullable: false, precision: 18, scale: 2),
                     Invoice_InvoiceId = c.Int(),
                 })
                 .PrimaryKey(t => t.ItemLineId)
                 .ForeignKey("dbo.Invoices", t => t.Invoice_InvoiceId)
                 .Index(t => t.Invoice_InvoiceId);
-            Sql("ALTER TABLE dbo.ItemLines ADD TotalPrice AS Amount * SinglePrice");
 
             CreateTable(
                 "dbo.AspNetRoles",

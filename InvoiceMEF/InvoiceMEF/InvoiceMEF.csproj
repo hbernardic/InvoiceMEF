@@ -190,6 +190,10 @@
     <Compile Include="Migrations\201702022317401_ChangeUserId.Designer.cs">
       <DependentUpon>201702022317401_ChangeUserId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702040142367_EditTotalPrices.cs" />
+    <Compile Include="Migrations\201702040142367_EditTotalPrices.Designer.cs">
+      <DependentUpon>201702040142367_EditTotalPrices.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -202,6 +206,7 @@
     <Compile Include="ViewModels\FormViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-simplex.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -280,6 +285,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702022317401_ChangeUserId.resx">
       <DependentUpon>201702022317401_ChangeUserId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702040142367_EditTotalPrices.resx">
+      <DependentUpon>201702040142367_EditTotalPrices.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

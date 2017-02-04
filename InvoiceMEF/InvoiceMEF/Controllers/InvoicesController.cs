@@ -71,7 +71,8 @@ namespace InvoiceMEF.Controllers
                 ApplicationUser = user,
                 BuyerName = formViewModel.Invoice.BuyerName,
                 DateCreated = DateTime.Today,
-                DateDue = formViewModel.Invoice.DateDue
+                DateDue = formViewModel.Invoice.DateDue,
+                TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount))
 
             };
 
@@ -88,14 +89,13 @@ namespace InvoiceMEF.Controllers
                     Description = current.Description,
                     Amount = current.Amount,
                     SinglePrice = current.SinglePrice,
+                    TotalPrice = current.SinglePrice * current.Amount,
                     Invoice = invoice
 
                 };
 
                 _context.ItemLines.Add(itemLine);
             }
-
-
 
             _context.SaveChanges();
 
