@@ -24,6 +24,11 @@
                 @Html.LabelFor(i => i.Invoice.DateDue)
                 @Html.TextBoxFor(i => i.Invoice.DateDue, new {@class = "form-control"})
             </div>
+            <div>
+                @Html.LabelFor(i => i.TaxCountriesValue)
+                @Html.DropDownListFor(i => i.TaxCountriesValue, new SelectList(Model.TaxCountries, "Value", "Text"), new { @class = "form-control"})
+                
+            </div>
             <br/>
 
             <h4>Items</h4>

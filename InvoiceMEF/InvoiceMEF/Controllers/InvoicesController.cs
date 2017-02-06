@@ -2,16 +2,29 @@
 using InvoiceMEF.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Plugins.Interfaces;
 using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 
 namespace InvoiceMEF.Controllers
 {
+    [Authorize]
     public class InvoicesController : Controller
     {
+        // Mef 
+        private CompositionContainer _compositionContainer;
+
+        [Import(typeof(ICore))]
+        public ICore Core;
+
+
         // DbContext Setup
         private ApplicationDbContext _context;
+
 
         // User manager - attached to application DB context       
         protected UserManager<ApplicationUser> UserManager { get; set; }
@@ -21,6 +34,22 @@ namespace InvoiceMEF.Controllers
         {
             _context = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
+
+            var aggregateCatalog = new AggregateCatalog();
+            aggregateCatalog.Catalogs.Add(new AssemblyCatalog(Assembly.Load("Plugins")));
+
+
+            _compositionContainer = new CompositionContainer(aggregateCatalog);
+
+            try
+            {
+                _compositionContainer.ComposeParts(this);
+            }
+            catch (CompositionException compositionException)
+            {
+                Console.WriteLine(compositionException);
+                throw;
+            }
         }
 
         // Dispose _context
@@ -56,6 +85,7 @@ namespace InvoiceMEF.Controllers
         {
             var formViewModel = new FormViewModel();
 
+
             return View(formViewModel);
         }
 
@@ -66,13 +96,18 @@ namespace InvoiceMEF.Controllers
             var user = UserManager.FindById(User.Identity.GetUserId());
             var itemLines = formViewModel.ItemLines;
 
+            var totalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount));
+
+
+
             var invoice = new Invoice()
             {
                 ApplicationUser = user,
                 BuyerName = formViewModel.Invoice.BuyerName,
                 DateCreated = DateTime.Today,
                 DateDue = formViewModel.Invoice.DateDue,
-                TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount))
+                TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount)),
+                TotalPriceAfterTax = Core.CalculateTax(totalPrice, formViewModel.TaxCountries[formViewModel.TaxCountriesValue].Text)
 
             };
 
