@@ -29,10 +29,8 @@ namespace InvoiceMEF.Controllers
         // DbContext Setup
         private ApplicationDbContext _context;
 
-
         // User manager - attached to application DB context       
         protected UserManager<ApplicationUser> UserManager { get; set; }
-
 
 
         // Constructor
@@ -99,14 +97,12 @@ namespace InvoiceMEF.Controllers
             return View(formViewModel);
         }
 
-
         // POST: Create
         [HttpPost]
         public ActionResult Create(FormViewModel formViewModel)
         {
             var itemLines = formViewModel.ItemLines;
             var totalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount));
-
 
             // Invoice to Db
             var invoice = new Invoice()
@@ -117,13 +113,10 @@ namespace InvoiceMEF.Controllers
                 DateDue = formViewModel.Invoice.DateDue,
                 TotalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount)),
                 TotalPriceAfterTax = Core.CalculateTax(totalPrice, formViewModel.TaxCountries[formViewModel.TaxCountriesValue].Text)
-
             };
 
             _invoiceRepository.InsertInvoice(invoice);
             _invoiceRepository.Save();
-
-
 
 
             foreach (var current in itemLines)
@@ -135,14 +128,12 @@ namespace InvoiceMEF.Controllers
                     SinglePrice = current.SinglePrice,
                     TotalPrice = current.SinglePrice * current.Amount,
                     Invoice = invoice
-
                 };
 
                 _itemLineRepository.InsertItemLine(itemLine);
             }
 
             _itemLineRepository.Save();
-
 
             return RedirectToAction("Index");
         }
