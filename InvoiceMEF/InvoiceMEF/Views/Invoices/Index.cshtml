@@ -16,6 +16,9 @@
             #
         </th>
         <th>
+            User
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.DateCreated)
         </th>
         <th>
@@ -37,6 +40,9 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.InvoiceId)
+        </td>        
+        <td>
+            @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.DateCreated)

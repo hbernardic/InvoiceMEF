@@ -203,6 +203,10 @@
     <Compile Include="Models\ItemLine.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\IInvoiceRepository.cs" />
+    <Compile Include="Repositories\IItemLineRepository.cs" />
+    <Compile Include="Repositories\InvoiceRepository.cs" />
+    <Compile Include="Repositories\ItemLineRepository.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\FormViewModel.cs" />
   </ItemGroup>

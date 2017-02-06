@@ -13,7 +13,7 @@ namespace InvoiceMEF.ViewModels
         public IList<SelectListItem> TaxCountries { get; } = new List<SelectListItem>()
         {
             new SelectListItem() { Text = "Croatia", Value = "0"},
-            new SelectListItem() { Text = "Bosnia", Value = "1"},
+            new SelectListItem() { Text = "Hungary", Value = "1"},
             new SelectListItem() { Text = "Serbia", Value = "2"},
             new SelectListItem() { Text = "Slovenia", Value = "3"}
         };

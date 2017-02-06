@@ -1,4 +1,5 @@
 ﻿using InvoiceMEF.Models;
+using InvoiceMEF.Repositories;
 using InvoiceMEF.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -21,6 +22,9 @@ namespace InvoiceMEF.Controllers
         [Import(typeof(ICore))]
         public ICore Core;
 
+        //Repositories
+        private IInvoiceRepository _invoiceRepository;
+        private IItemLineRepository _itemLineRepository;
 
         // DbContext Setup
         private ApplicationDbContext _context;
@@ -29,12 +33,19 @@ namespace InvoiceMEF.Controllers
         // User manager - attached to application DB context       
         protected UserManager<ApplicationUser> UserManager { get; set; }
 
+
+
         // Constructor
         public InvoicesController()
         {
             _context = new ApplicationDbContext();
+
+            _invoiceRepository = new InvoiceRepository(_context);
+            _itemLineRepository = new ItemLineRepository(_context);
+
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
 
+            //Mef Init
             var aggregateCatalog = new AggregateCatalog();
             aggregateCatalog.Catalogs.Add(new AssemblyCatalog(Assembly.Load("Plugins")));
 
@@ -66,7 +77,7 @@ namespace InvoiceMEF.Controllers
         // GET: Invoices
         public ActionResult Index()
         {
-            var invoices = _context.Invoices.ToList();
+            var invoices = _invoiceRepository.GetInvoices();
 
             return View(invoices);
         }
@@ -75,7 +86,7 @@ namespace InvoiceMEF.Controllers
         [Route("Invoices/Details/{id}")]
         public ActionResult Details(int id)
         {
-            var itemLines = _context.ItemLines.Where(i => i.Invoice.InvoiceId == id).ToList();
+            var itemLines = _itemLineRepository.GetItemLinesByUserId(id);
 
             return View(itemLines);
         }
@@ -85,24 +96,22 @@ namespace InvoiceMEF.Controllers
         {
             var formViewModel = new FormViewModel();
 
-
             return View(formViewModel);
         }
 
+
+        // POST: Create
         [HttpPost]
         public ActionResult Create(FormViewModel formViewModel)
         {
-
-            var user = UserManager.FindById(User.Identity.GetUserId());
             var itemLines = formViewModel.ItemLines;
-
             var totalPrice = itemLines.Sum(x => Convert.ToDecimal(x.SinglePrice) * Convert.ToInt32(x.Amount));
 
 
-
+            // Invoice to Db
             var invoice = new Invoice()
             {
-                ApplicationUser = user,
+                ApplicationUser = GetCurrentUser(),
                 BuyerName = formViewModel.Invoice.BuyerName,
                 DateCreated = DateTime.Today,
                 DateDue = formViewModel.Invoice.DateDue,
@@ -111,8 +120,8 @@ namespace InvoiceMEF.Controllers
 
             };
 
-            _context.Invoices.Add(invoice);
-            _context.SaveChanges();
+            _invoiceRepository.InsertInvoice(invoice);
+            _invoiceRepository.Save();
 
 
 
@@ -129,12 +138,19 @@ namespace InvoiceMEF.Controllers
 
                 };
 
-                _context.ItemLines.Add(itemLine);
+                _itemLineRepository.InsertItemLine(itemLine);
             }
 
-            _context.SaveChanges();
+            _itemLineRepository.Save();
+
 
             return RedirectToAction("Index");
         }
+
+        private ApplicationUser GetCurrentUser()
+        {
+            return UserManager.FindById(User.Identity.GetUserId());
+        }
+
     }
 }
